@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "ideal-pancake"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-11v27xgxzs6kn"
+s3_prefix = "ideal-pancake"
+region = "ap-northeast-1"
+capabilities = ["CAPABILITY_IAM","CAPABILITY_NAMED_IAM"]
+image_repositories = []

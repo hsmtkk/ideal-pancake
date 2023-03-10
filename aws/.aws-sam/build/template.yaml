@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  ExampleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ExampleFunction
+      Handler: lambda
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/credential.json
+          PROJECT_ID: ideal-pancake-380204
+          PUBSUB_TOPIC: example
+      Role:
+        Fn::GetAtt:
+        - SpannerFuncRole
+        - Arn
+    Metadata:
+      SamResourceId: ExampleFunction
+  SpannerFuncRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: ${AWS::StackName}-spanner-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: sts:AssumeRole
+          Principal:
+            Service: lambda.amazonaws.com
+      Policies:
+      - PolicyName: spanner-func-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: '*'
